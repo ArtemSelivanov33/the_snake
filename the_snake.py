@@ -60,7 +60,7 @@ class Apple(GameObject):
     Яблоко должно отображаться в случайных клетках игрового поля.
     """
 
-    def __init__(self, occupied_positions, bg_color=APPLE_COLOR) -> None:
+    def __init__(self, occupied_positions=[0], bg_color=APPLE_COLOR) -> None:
         super().__init__(bg_color)
         self.position = self.randomize_position(occupied_positions)
 
