@@ -64,7 +64,7 @@ class Apple(GameObject):
         super().__init__(bg_color)
         self.position = self.randomize_position(occupied_positions)
 
-    def randomize_position(self, values):
+    def randomize_position(self, forbidden_positions):
         """Устанавливает случайное положение яблока на игровом поле.
 
         Избегает позиции, которые уже заняты.
@@ -74,7 +74,7 @@ class Apple(GameObject):
                 randint(0, GRID_WIDTH - 1) * GRID_SIZE,
                 randint(0, GRID_HEIGHT - 1) * GRID_SIZE
             )
-            if position not in values:
+            if position not in forbidden_positions:
                 return position
 
     def draw(self):
@@ -145,13 +145,6 @@ class Snake(GameObject):
             # Если длина змейки не увеличилась, очищаем значение
             self.last = None
 
-        if self.get_head_position() == apple.position:
-            self.positions.append(self.last)
-            apple.position = apple.randomize_position(self.positions)
-        elif self.get_head_position() in self.positions[1:]:
-            screen.fill(BOARD_BACKGROUND_COLOR)
-            self.reset()
-
 
 def handle_keys(game_object):
     """Обрабатывает нажатия клавиш."""
@@ -182,6 +175,13 @@ def main():
         pg.display.update()
         apple.draw()
         snake.draw()
+
+        if snake.get_head_position() == apple.position:
+            snake.positions.append(snake.last)
+            apple.position = apple.randomize_position(snake.positions)
+        elif snake.get_head_position() in snake.positions[1:]:
+            screen.fill(BOARD_BACKGROUND_COLOR)
+            snake.reset()
 
 
 if __name__ == '__main__':
